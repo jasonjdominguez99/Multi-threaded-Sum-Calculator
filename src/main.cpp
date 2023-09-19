@@ -32,12 +32,24 @@ int main()
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cout << std::endl << std::endl;
 
-    // Display values
-    for (const int val : vals)
-    {
-        std::cout << val << " ";
-    }
-    std::cout << std::endl << std::endl << std::endl;
+    // // Display values
+    // for (const int val : vals)
+    // {
+    //     std::cout << val << " ";
+    // }
+    // std::cout << std::endl << std::endl << std::endl;
+
+    // Get user input fot number of threads to use
+    std::cout << "How many threads would you like to use? (1-8): ";
+    int numThreads;
+    std::cin >> numThreads;
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << std::endl << std::endl;
+
+    // Display number of threads entered
+    std::cout << "You chose " << numThreads << " threads..."
+              << std::endl << std::endl << std::endl;
 
     return 0;
 }

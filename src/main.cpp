@@ -11,7 +11,7 @@ int main()
 {
     // Welcome user
     std::cout << "Welcome to the Multi-threaded Sum Calculator"
-              << std::endl << std::endl;
+              << std::endl << std::endl << std::endl;
 
     // Get user input and initialize values to be summed
     std::cout << "Enter the size of the array: ";
@@ -20,9 +20,10 @@ int main()
 
     std::vector<int> vals(size);
 
-    std::cout << "Enter the elements of the array "
+    std::cout << std::endl
+              << "Enter the elements of the array "
                  "(separated by spaces, press enter to continue):"
-              << std::endl;
+              << std::endl << std::endl;
     for (size_t i = 0; i < size; ++i)
     {
         std::cin >> vals[i];
@@ -36,7 +37,7 @@ int main()
     {
         std::cout << val << " ";
     }
-    std::cout << std::endl << std::endl;
+    std::cout << std::endl << std::endl << std::endl;
 
     return 0;
 }

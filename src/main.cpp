@@ -6,6 +6,11 @@
 //==============================================================================
 
 #include <iostream>
+#include <numeric>
+#include <thread>
+#include <vector>
+
+int sum(const std::vector<int> & vals);
 
 int main()
 {
@@ -51,5 +56,15 @@ int main()
     std::cout << "You chose " << numThreads << " threads..."
               << std::endl << std::endl << std::endl;
 
+    // Display the result of summing the values (not multi-threaded)
+    std::cout << "The sum of elements is "
+              << sum(vals)
+              << std::endl << std::endl;
+
     return 0;
+}
+
+int sum(const std::vector<int> & vals)
+{
+    return std::accumulate(std::begin(vals), std::end(vals), 0);
 }

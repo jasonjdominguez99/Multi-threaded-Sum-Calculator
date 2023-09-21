@@ -6,11 +6,29 @@
 //==============================================================================
 
 #include <iostream>
+#include <mutex>
 #include <numeric>
 #include <thread>
 #include <vector>
 
-int sum(const std::vector<int> & vals);
+// Mutex used to synchronize shared access to sum
+std::mutex m;
+
+void sum(
+    const std::vector<int> & vals,
+    const int start,
+    const int end,
+    int & sum,
+    const int threadNum
+);
+
+void displayThreadSumOutput(
+    const std::vector<int> & vals,
+    const int start,
+    const int end,
+    const int threadNum,
+    const int partialSum
+);
 
 int main()
 {
@@ -52,19 +70,97 @@ int main()
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cout << std::endl << std::endl;
 
-    // Display number of threads entered
-    std::cout << "You chose " << numThreads << " threads..."
+    // // Display number of threads entered
+    // std::cout << "You chose " << numThreads << " threads..."
+    //           << std::endl << std::endl << std::endl;
+
+    // // Display the result of summing the values (not multi-threaded)
+    // std::cout << "The sum of elements is "
+    //           << sum(vals)
+    //           << std::endl << std::endl;
+
+    std::cout << "Calculating the sum of elements using "
+              << numThreads
+              << " threads..."
               << std::endl << std::endl << std::endl;
 
-    // Display the result of summing the values (not multi-threaded)
-    std::cout << "The sum of elements is "
-              << sum(vals)
-              << std::endl << std::endl;
+    // Compute number of elements to assign to each thread
+    const int numValsPerThread = size/numThreads;
+
+    // Create threads and calculate sum in parallel
+    int totalSum = 0;
+
+    std::vector<std::thread> threads;
+    threads.reserve(size);
+
+    for (size_t i = 0; i < numThreads; ++i)
+    {
+        auto subStart = i * numValsPerThread;
+        auto subEnd = (i + 1) * numValsPerThread;
+        if (i == numThreads - 1)
+        {
+            // assign all remaining values to final thread
+            subEnd = size;
+        }
+
+        threads.emplace_back(
+            sum,
+            std::ref(vals),
+            subStart,
+            subEnd,
+            std::ref(totalSum),
+            i
+        );
+    }
+
+    for (auto & thread : threads)
+    {
+        thread.join();
+    }
+
+    std::cout << "Final Sum: " << totalSum << std::endl << std::endl;
 
     return 0;
 }
 
-int sum(const std::vector<int> & vals)
+void sum(
+    const std::vector<int> & vals,
+    const int start,
+    const int end,
+    int & sum,
+    const int threadNum
+)
 {
-    return std::accumulate(std::begin(vals), std::end(vals), 0);
+    int partialSum = 0;
+    for (size_t i = start; i < end; ++i)
+    {
+        partialSum += vals[i];
+    }
+    
+    std::lock_guard<std::mutex> lock(m);
+
+    displayThreadSumOutput(vals, start, end, threadNum, partialSum);
+    sum += partialSum;
+}
+
+void displayThreadSumOutput(
+    const std::vector<int> & vals,
+    const int start,
+    const int end,
+    const int threadNum,
+    const int partialSum
+)
+{
+    std::cout << "Thread " << threadNum << ": "
+              << "Calculating sum for elements "
+              << "[";
+    for (size_t i = start; i < end; ++i)
+    {
+        std::string delimiter = i + 1 == end ? "]" : ", ";
+        std::cout << vals[i] << delimiter;
+    }
+    std::cout << std::endl;
+
+    std::cout << "Thread " << threadNum << ": "
+              << "Sum = " << partialSum << std::endl;
 }

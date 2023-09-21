@@ -55,13 +55,6 @@ int main()
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cout << std::endl << std::endl;
 
-    // // Display values
-    // for (const int val : vals)
-    // {
-    //     std::cout << val << " ";
-    // }
-    // std::cout << std::endl << std::endl << std::endl;
-
     // Get user input fot number of threads to use
     std::cout << "How many threads would you like to use? (1-8): ";
     int numThreads;
@@ -69,15 +62,6 @@ int main()
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cout << std::endl << std::endl;
-
-    // // Display number of threads entered
-    // std::cout << "You chose " << numThreads << " threads..."
-    //           << std::endl << std::endl << std::endl;
-
-    // // Display the result of summing the values (not multi-threaded)
-    // std::cout << "The sum of elements is "
-    //           << sum(vals)
-    //           << std::endl << std::endl;
 
     std::cout << "Calculating the sum of elements using "
               << numThreads
